@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
 <title>Paper Tigers: Jailbreak Judges Mistake Fake Answers for Real Harm</title>
 <meta name="description" content="Jailbreak judges call fake answers successful jailbreaks. We built honeypots to measure it, trained a judge that asks whether an answer actually delivers, and release the judge and the test data.">
 <meta name="author" content="Arth Singh, Samuel Simko, Terry Zhang, Bernhard Schölkopf, Zhijing Jin">
@@ -32,15 +33,6 @@
   --f2: 0 -2px 0 0 var(--ink), 0 2px 0 0 var(--ink), -2px 0 0 0 var(--ink), 2px 0 0 0 var(--ink);
   --f3: 0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink);
   --f4: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink);
-}
-/* dark theme: the same accents on neutral grays; text on accent fills keeps --on-accent */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --ink: #EDEDED; --ink-2: #C8C8C8; --ink-3: #A0A0A0;
-    --cream: #121212; --paper: #1A1A1A; --sand: #222222; --sand-2: #2A2A2A; --line: #383838;
-    --surface: #1C1C1C; --yellow-lt: #8A6A12; --yellow-pale: #3B3115; --blue-dk: #63BDF5; --red: #FF8F7A;
-  }
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -110,9 +102,8 @@ h1 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; margi
 .stage { position: absolute; left: 0; top: 0; width: 520px; height: 330px; transform-origin: 0 0; overflow: hidden; }
 .stage > * { position: absolute; }
 .stage img, .stage svg { image-rendering: pixelated; shape-rendering: crispEdges; display: block; }
-/* hero clouds: pale blue-gray on the white page, white on the dark page */
+/* hero clouds: pale blue-gray on the white page */
 .stage path[data-px="cloud.w"] { fill: #E3ECF5; } .stage path[data-px="cloud.b"] { fill: #C4D8EC; }
-@media (prefers-color-scheme: dark) { .stage path[data-px="cloud.w"] { fill: #FFFFFF; } .stage path[data-px="cloud.b"] { fill: #D6ECFF; } }
 .bubble { background: var(--surface); box-shadow: var(--f3); font-family: var(--pixel); white-space: nowrap; }
 .bubble::after { content: ''; position: absolute; width: 8px; height: 8px; background: var(--surface); box-shadow: 3px 0 0 0 var(--ink), 0 3px 0 0 var(--ink), 3px 3px 0 0 var(--ink); }
 .b-alert::after { left: 6px; bottom: -9px; }
