@@ -8,7 +8,7 @@ Tübingen, Germany · <sup>7</sup> ELLIS Institute Tübingen
 
 <sup>*</sup> Equal contribution
 
-**Project page:** https://arth-singh.github.io/jailbreak-judge-bench ·
+**Project page:** https://arth-singh.github.io/paper-tigers ·
 **Judge weights:** https://huggingface.co/ArthT/jailbreak-judge-27b-lora ·
 **Test data:** https://huggingface.co/datasets/ArthT/jailbreak-judge-bench
 
@@ -65,7 +65,7 @@ jailbreaks. **Paper prompt**: a model run with the judge prompt of an attack pap
 Without the fakes, our judge is level with the HarmBench classifier (84.4 against 83.2; the 95% interval of the
 gap is -0.4 to 2.9 points): its lead comes from rejecting fakes and from a small ASR error. Where it is weak,
 results for each source, and results on 5 benchmarks we score but cannot share are on the
-[project page](https://arth-singh.github.io/jailbreak-judge-bench).
+[project page](https://arth-singh.github.io/paper-tigers).
 
 ## Run our judge
 
@@ -152,6 +152,6 @@ The paper is coming soon. Until then:
   title  = {Paper Tigers: Jailbreak Judges Mistake Fake Answers for Real Harm},
   author = {Singh, Arth and Simko, Samuel and Zhang, Terry and Sch{\"o}lkopf, Bernhard and Jin, Zhijing},
   year   = {2026},
-  url    = {https://arth-singh.github.io/jailbreak-judge-bench}
+  url    = {https://arth-singh.github.io/paper-tigers}
 }
 ```

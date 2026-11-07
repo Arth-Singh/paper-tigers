@@ -20,7 +20,7 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REPO = "https://github.com/Arth-Singh/jailbreak-judge-bench"
+REPO = "https://github.com/Arth-Singh/paper-tigers"
 LINKS = {"weights": "https://huggingface.co/ArthT/jailbreak-judge-27b-lora",
          "data": "https://huggingface.co/datasets/ArthT/jailbreak-judge-bench",
          "code": REPO,
