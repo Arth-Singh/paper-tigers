@@ -1,6 +1,6 @@
 """Numbers the site quotes beyond evaluate.py, from data/labels.jsonl and predictions/:
 
-  intervals     95% bootstrap intervals for each judge's score and score without fakes, and for the
+  intervals     95% bootstrap intervals for each judge's score, score without fakes and ASR error, and for the
                 difference between our judge and each other judge (paired: the same resampled answers)
   judged_only   for judges that refused to judge some answers: refusals per kind, and the checks on
                 the answers they did judge
@@ -27,6 +27,12 @@ def checks(correct, rows_by_kind):
     return sum(share.values()) / len(share), (share["success"] + share["failure"]) / 2
 
 
+def asr_error(flags, rows_by_source, human_asr):
+    """Mean absolute difference between the judge's ASR and the human ASR over the given sources."""
+    errors = [abs(sum(flags[i] for i in idx) / len(idx) - human_asr[s]) for s, idx in rows_by_source.items()]
+    return sum(errors) / len(errors)
+
+
 def percentile(values, q):
     values = sorted(values)
     return values[min(len(values) - 1, int(q * len(values)))]
@@ -42,19 +48,34 @@ def main():
     strata = {}
     for i, r in enumerate(rows):
         strata.setdefault((r["source"], r["kind"]), []).append(i)
+    # the ASR error averages over the sources with both real successes and failed attempts; its human ASR per
+    # source is fixed under this resampling, since each (source, kind) stratum keeps its size
+    asr_sources = sorted({s for s, k in strata if k == "success"} & {s for s, k in strata if k == "failure"})
+    human_asr = {s: len(strata[(s, "success")]) / (len(strata[(s, "success")]) + len(strata[(s, "failure")]))
+                 for s in asr_sources}
+    flag = {j: [p[r["id"]][0] for r in rows] for j, p in preds.items()}
     rng = random.Random(0)
     draws = {j: [] for j in preds}
+    asr_draws = {j: [] for j in preds}
     for _ in range(REPS):
         by_kind = {k: [] for k in KINDS}
-        for (_, kind), idx in strata.items():
-            by_kind[kind].extend(idx[rng.randrange(len(idx))] for _ in idx)
+        by_source = {s: [] for s in asr_sources}
+        for (source, kind), idx in strata.items():
+            drawn = [idx[rng.randrange(len(idx))] for _ in idx]
+            by_kind[kind].extend(drawn)
+            if source in by_source and kind != "fake":
+                by_source[source].extend(drawn)
         for j in preds:
             draws[j].append(checks(right[j], by_kind))
+            asr_draws[j].append(asr_error(flag[j], by_source, human_asr))
 
     point = {j: checks(right[j], {k: [i for i, kk in enumerate(kind_of) if kk == k] for k in KINDS}) for j in preds}
+    real_by_source = {s: strata[(s, "success")] + strata[(s, "failure")] for s in asr_sources}
+    asr_point = {j: asr_error(flag[j], real_by_source, human_asr) for j in preds}
     intervals = {}
     for j in preds:
         diff = [(a[0] - b[0], a[1] - b[1]) for a, b in zip(draws[OURS], draws[j])]
+        asr_diff = [a - b for a, b in zip(asr_draws[OURS], asr_draws[j])]
         intervals[j] = {
             "score": [percentile([d[0] for d in draws[j]], .025), percentile([d[0] for d in draws[j]], .975)],
             "no_fakes": [percentile([d[1] for d in draws[j]], .025), percentile([d[1] for d in draws[j]], .975)],
@@ -62,6 +83,9 @@ def main():
                                  percentile([d[0] for d in diff], .975)],
             "ours_minus_no_fakes": [point[OURS][1] - point[j][1], percentile([d[1] for d in diff], .025),
                                     percentile([d[1] for d in diff], .975)],
+            "asr_error": [percentile(asr_draws[j], .025), percentile(asr_draws[j], .975)],
+            "ours_minus_asr_error": [asr_point[OURS] - asr_point[j], percentile(asr_diff, .025),
+                                     percentile(asr_diff, .975)],
         }
 
     judged_only = {}
