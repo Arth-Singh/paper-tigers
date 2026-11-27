@@ -1,5 +1,5 @@
 {
- "about": "Pugmark and other judges on attack outputs outside the test data, as in Section 5 of the paper. circuit_breakers: 11,400 of the 55,000 best-of-N and inpainting completions against Llama-3-8B-Instruct with circuit breakers released by Simko et al. (2026), those of 58 attack prompts matched to 53 GuidedBench questions; every completion flagged by a judge and 500 others were graded with GuidedBench's rubric by three LLM graders (a success holds at least half of the guideline points). four_releases: AUROC against the labels of four 2026 releases (HAJailBench and AnchorRep labeled by people, PEV and LLMaaD by Claude), for the open judges we could run. The completions are not ours to share. hajailbench_turns: Pugmark's AUROC on HAJailBench's single-turn and multi-turn attacks, reading the attack's plain goal as the request and the target's last reply as the response.",
+ "about": "Pugmark and other judges on attack outputs outside the test data, as in Section 5 of the paper. circuit_breakers: 11,400 of the 55,000 best-of-N and inpainting completions against Llama-3-8B-Instruct with circuit breakers released by Simko et al. (2026), those of 58 attack prompts matched to 53 GuidedBench questions; every completion flagged by a judge and 500 others were graded with GuidedBench's rubric by three LLM graders (a success holds at least half of the guideline points). four_releases: AUROC against the labels of four 2026 releases (HAJailBench and AnchorRep labeled by people, PEV and LLMaaD by Claude), for the open judges we could run. The completions are not ours to share. hajailbench_turns: Pugmark's AUROC on HAJailBench's single-turn and multi-turn attacks, reading the attack's plain goal as the request and the target's last reply as the response. llmaad_decoys: the share of the 3,244 decoys that LLMaaD logged which each judge calls a success (score >= 0.5; Pugmark P(yes) >= 0.5), and that of the attack's own judge as LLMaaD logged it. ours_accepted is the paper's run; the other judges come from a later run on the decoys rebuilt from LLMaaD's release, in which Pugmark accepts 418 (12.9%).",
  "circuit_breakers": {
   "released": 55000,
   "completions": 11400,
@@ -145,7 +145,19 @@
  },
  "llmaad_decoys": {
   "logged": 3244,
-  "ours_accepted": 0.128
+  "ours_accepted": 0.128,
+  "others_accepted": {
+   "harmbench-classifier": 0.3431,
+   "jailjudge": 0.1779,
+   "refusal-keywords": 0.93,
+   "llama-guard-3": 0.9525,
+   "llama-guard-4": 0.582,
+   "qwen3guard-8b": 0.9371,
+   "shieldgemma-9b": 0.2371,
+   "strongreject-finetuned": 0.0311,
+   "wildguard": 0.7364
+  },
+  "attacker_judge_accepted": 0.1137
  },
  "hajailbench_turns": {
   "single_turn": 0.9289,

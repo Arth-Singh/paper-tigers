@@ -359,6 +359,12 @@ def facts(results, extra):
     if claude_order[0] != "ours":
         raise SystemExit("the text says Pugmark leads on the Claude-labeled releases")
     fr_name = {**name, "strongreject-finetuned": "fine-tuned StrongREJECT classifier"}
+    dec = out["llmaad_decoys"]
+    dec_others = dec["others_accepted"]
+    dec_order = sorted(dec_others, key=dec_others.get)
+    if dec_order[0] != "strongreject-finetuned" or dec_others[dec_order[1]] <= dec["ours_accepted"]:
+        raise SystemExit("the text says only the fine-tuned StrongREJECT classifier accepts fewer decoys than Pugmark")
+    dec_rest = [dec_others[j] for j in dec_order[1:]]
 
     def flag_share(judge):
         f = cb["judges"][judge]
@@ -471,7 +477,11 @@ def facts(results, extra):
         "hj_multi": f"{out['hajailbench_turns']['multi_turn']:.3f}",
         "sources_n": str(len(report["ours"]["sources"])),
         "llmaad_logged": f"{out['llmaad_decoys']['logged']:,}",
-        "llmaad_ours": p1(out["llmaad_decoys"]["ours_accepted"]) + "%",
+        "llmaad_ours": p1(dec["ours_accepted"]) + "%",
+        "llmaad_judges": str(len(dec_others)),
+        "llmaad_sr": p1(dec_others["strongreject-finetuned"]) + "%",
+        "llmaad_sr_fakes": f"{100 * (1 - uni['strongreject-finetuned']['not_fooled']):.0f}%",
+        "llmaad_rest": f"{p1(min(dec_rest))} to {p1(max(dec_rest))}%",
         "updated": date.today().isoformat(),
     }
 
