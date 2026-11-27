@@ -348,6 +348,20 @@ def facts(results, extra):
     fr_order = sorted(fr_mean, key=lambda j: -fr_mean[j])
     if fr_order[0] != "ours" or fr_order[1] != "strongreject-finetuned":
         raise SystemExit("the text says Pugmark has the best mean AUROC on the four releases, then StrongREJECT")
+    fr_min = {j: min(v.values()) for j, v in fr.items()}
+    if max(fr_min, key=fr_min.get) != "ours":
+        raise SystemExit("the text says Pugmark has the highest minimum AUROC on the four releases")
+    by = out["four_releases"]["labeled_by"]
+
+    def fr_group(who):
+        means = {j: sum(a for r, a in v.items() if by[r] == who) / sum(by[r] == who for r in v) for j, v in fr.items()}
+        order = sorted(means, key=lambda j: -means[j])
+        return means, order
+    people, people_order = fr_group("people")
+    claude, claude_order = fr_group("Claude")
+    if claude_order[0] != "ours":
+        raise SystemExit("the text says Pugmark leads on the Claude-labeled releases")
+    fr_name = {**name, "qwen3guard-8b": "Qwen3Guard 8B"}
 
     def flag_share(judge):
         f = cb["judges"][judge]
@@ -450,6 +464,13 @@ def facts(results, extra):
         "cb_hb_caught": str(cb["judges"]["harmbench-classifier"]["consensus_caught"]),
         "fr_ours": f"{fr_mean['ours']:.3f}", "fr_sr": f"{fr_mean['strongreject-finetuned']:.3f}",
         "fr_hb": f"{fr_mean['harmbench-classifier']:.3f}", "fr_judges": str(len(fr)),
+        "fr_ours_min": f"{fr_min['ours']:.3f}",
+        "fr_people_ours": f"{people['ours']:.3f}",
+        "fr_people_rank": f"{people_order.index('ours') + 1} of {len(people_order)}",
+        "fr_people_best": f"{fr_name[people_order[0]]} ({people[people_order[0]]:.3f})",
+        "fr_claude_ours": f"{claude['ours']:.3f}",
+        "fr_claude_next": f"{fr_name[claude_order[1]]} ({claude[claude_order[1]]:.3f})",
+        "cb_unflagged": str(cb["graded_unflagged"]),
         "hj_single": f"{out['hajailbench_turns']['single_turn']:.3f}",
         "hj_multi": f"{out['hajailbench_turns']['multi_turn']:.3f}",
         "sources_n": str(len(report["ours"]["sources"])),

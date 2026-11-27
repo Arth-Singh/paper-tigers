@@ -46,7 +46,8 @@
     ],
     "consensus_caught": 6
    }
-  }
+  },
+  "graded_unflagged": 500
  },
  "four_releases": {
   "releases": {
@@ -128,6 +129,18 @@
     "pev": 0.6965,
     "llmaad": 0.4253
    }
+  },
+  "labeled_by": {
+   "hajailbench": "people",
+   "anchorrep": "people",
+   "pev": "Claude",
+   "llmaad": "Claude"
+  },
+  "names": {
+   "hajailbench": "HAJailBench",
+   "anchorrep": "AnchorRep",
+   "pev": "PEV",
+   "llmaad": "LLMaaD"
   }
  },
  "llmaad_decoys": {
