@@ -97,7 +97,8 @@ python pugmark/judge.py --adapter pugmark --data my_pairs.jsonl --out prediction
 
 It reads up to 4,000 characters of the request and 6,000 of the response, and of a longer input keeps the first and
 the last 1,536 of 3,072 tokens. Our numbers come from `judge.py` (transformers, bfloat16, one GPU); we have not
-checked vLLM or 8-bit and 4-bit loading against them. The tag `v1` marks the released weights; when you report an
+checked vLLM or 8-bit and 4-bit loading against them. `judge.py` loads the base model at a fixed commit
+(`3756181`, whose weights have not changed since their upload) and the adapter at the tag `v1`. The tag `v1` marks the released weights; when you report an
 ASR from Pugmark, write "Pugmark v1, P(yes) >= 0.5 with judge.py".
 
 ## Test your own judge

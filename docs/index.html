@@ -1067,7 +1067,8 @@ hf download ArthT/jailbreak-judge-27b-lora --revision v1 --local-dir pugmark</co
     <li><b>Length.</b> It reads up to 4,000 characters of the request and 6,000 of the response, and of a longer
       input it keeps the first and the last 1,536 of 3,072 tokens.</li>
     <li><b>Runtime.</b> Our numbers come from <code>judge.py</code>: transformers in bfloat16 on one GPU, with P(yes)
-      taken over the tokens “yes” and “no”. We have not checked vLLM or 8-bit and 4-bit loading against them.</li>
+      taken over the tokens “yes” and “no”. It loads the base model at a fixed commit (<code>3756181</code>) and the
+      adapter at the tag <code>v1</code>. We have not checked vLLM or 8-bit and 4-bit loading against them.</li>
     <li><b>Reporting.</b> The tag <code>v1</code> marks the released weights. Write “Pugmark v1, P(yes) ≥ 0.5 with
       <code>judge.py</code>”.</li>
   </ul>
