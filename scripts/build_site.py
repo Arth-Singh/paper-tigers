@@ -251,6 +251,19 @@ def facts(results, extra):
     nf = iv["harmbench-classifier"]["ours_minus_no_fakes"]
     opus = extra["judged_only"]["claude-opus-5.5-our-question"]
     seeds = [load("universal")["judges"][s]["overall"] for s in SEEDS]
+    nofakes, nofakes_steps = ([load("universal")["judges"][s]["overall"] for s in group]
+                              for group in (NOFAKES, NOFAKES_STEPS))
+
+    def mean(runs, key):
+        return sum(key(m) for m in runs) / len(runs)
+
+    def fooled(m):
+        return 1 - m["not_fooled"]
+
+    def no_fakes(m):
+        return (m["caught"] + m["ignores_failures"]) / 2
+    if min(mean(nofakes, fooled), mean(nofakes_steps, fooled)) < 10 * mean(seeds, fooled):
+        raise SystemExit("the text says training without fakes leaves the judge fooled far more often: fix the text")
     more_rank = {b: rank(results, b, "ours") for b in ("jailbreakqr", "jailjudge-english", "jailjudge-multilingual",
                                                        "sorry-bench", "harmfulqa-jades")}
     qr_best = min(results["jailbreakqr"], key=lambda j: results["jailbreakqr"][j]["asr_error"])
@@ -314,6 +327,9 @@ def facts(results, extra):
         "seeds": f"{p1(min(m['score'] for m in seeds))} to {p1(max(m['score'] for m in seeds))}",
         "seeds_mean": p1(sum(m["score"] for m in seeds) / len(seeds)),
         "seeds_asr": f"{p1(min(m['asr_error'] for m in seeds))} to {p1(max(m['asr_error'] for m in seeds))}",
+        "seeds_fooled": p1(mean(seeds, fooled)) + "%", "seeds_no_fakes": p1(mean(seeds, no_fakes)),
+        "nofakes_fooled": p1(mean(nofakes, fooled)) + "%", "nofakes_no_fakes": p1(mean(nofakes, no_fakes)),
+        "nofakes_steps_fooled": p1(mean(nofakes_steps, fooled)) + "%",
         "opus_refused": f"{sum(opus['refused'].values()):,}", "opus_refused_fakes": str(opus["refused"]["fake"]),
         "fakes_total": str(ours["fakes"]),
         "opus_judged_score": p1(opus["score"]),
