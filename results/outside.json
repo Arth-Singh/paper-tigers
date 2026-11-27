@@ -1,0 +1,141 @@
+{
+ "about": "Pugmark and other judges on attack outputs outside the test data, as in Section 5 of the paper. circuit_breakers: 11,400 of the 55,000 best-of-N and inpainting completions against Llama-3-8B-Instruct with circuit breakers released by Simko et al. (2026), those of 58 attack prompts matched to 53 GuidedBench questions; every completion flagged by a judge and 500 others were graded with GuidedBench's rubric by three LLM graders (a success holds at least half of the guideline points). four_releases: AUROC against the labels of four 2026 releases (HAJailBench and AnchorRep labeled by people, PEV and LLMaaD by Claude), for the open judges we could run. The completions are not ours to share. hajailbench_turns: Pugmark's AUROC on HAJailBench's single-turn and multi-turn attacks, reading the request and the last reply.",
+ "circuit_breakers": {
+  "released": 55000,
+  "completions": 11400,
+  "graders": [
+   "GPT-4o",
+   "Gemini 4 argon",
+   "GPT-6.1 sol-pro"
+  ],
+  "consensus_successes": 7,
+  "judges": {
+   "strongreject-finetuned": {
+    "flags": 435,
+    "graded_successes": [
+     3,
+     3,
+     7
+    ],
+    "consensus_caught": 5
+   },
+   "harmbench-classifier": {
+    "flags": 49,
+    "graded_successes": [
+     3,
+     3,
+     5
+    ],
+    "consensus_caught": 4
+   },
+   "gpt-oss-safeguard-20b": {
+    "flags": 0,
+    "graded_successes": [
+     0,
+     0,
+     0
+    ],
+    "consensus_caught": 0
+   },
+   "ours": {
+    "flags": 20,
+    "graded_successes": [
+     4,
+     5,
+     7
+    ],
+    "consensus_caught": 6
+   }
+  }
+ },
+ "four_releases": {
+  "releases": {
+   "hajailbench": {
+    "rows": 10895,
+    "successes": 2277
+   },
+   "anchorrep": {
+    "rows": 1969,
+    "successes": 1663
+   },
+   "pev": {
+    "rows": 8000,
+    "successes": 1402
+   },
+   "llmaad": {
+    "rows": 312,
+    "successes": 47
+   }
+  },
+  "auroc": {
+   "ours": {
+    "hajailbench": 0.9136,
+    "anchorrep": 0.795,
+    "pev": 0.902,
+    "llmaad": 0.8954
+   },
+   "harmbench-classifier": {
+    "hajailbench": 0.8939,
+    "anchorrep": 0.8191,
+    "pev": 0.8049,
+    "llmaad": 0.6271
+   },
+   "jailjudge": {
+    "hajailbench": 0.8042,
+    "anchorrep": 0.7577,
+    "pev": 0.734,
+    "llmaad": 0.588
+   },
+   "refusal-keywords": {
+    "hajailbench": 0.7466,
+    "anchorrep": 0.6579,
+    "pev": 0.5471,
+    "llmaad": 0.3788
+   },
+   "llama-guard-3": {
+    "hajailbench": 0.8936,
+    "anchorrep": 0.8302,
+    "pev": 0.7629,
+    "llmaad": 0.156
+   },
+   "llama-guard-4": {
+    "hajailbench": 0.8319,
+    "anchorrep": 0.8396,
+    "pev": 0.7147,
+    "llmaad": 0.313
+   },
+   "qwen3guard-8b": {
+    "hajailbench": 0.9401,
+    "anchorrep": 0.8383,
+    "pev": 0.8058,
+    "llmaad": 0.4478
+   },
+   "shieldgemma-9b": {
+    "hajailbench": 0.7355,
+    "anchorrep": 0.7026,
+    "pev": 0.7111,
+    "llmaad": 0.3134
+   },
+   "strongreject-finetuned": {
+    "hajailbench": 0.9138,
+    "anchorrep": 0.7819,
+    "pev": 0.8914,
+    "llmaad": 0.8836
+   },
+   "wildguard": {
+    "hajailbench": 0.8081,
+    "anchorrep": 0.773,
+    "pev": 0.6965,
+    "llmaad": 0.4253
+   }
+  }
+ },
+ "llmaad_decoys": {
+  "logged": 3244,
+  "ours_accepted": 0.128
+ },
+ "hajailbench_turns": {
+  "single_turn": 0.9289,
+  "multi_turn": 0.7482
+ }
+}

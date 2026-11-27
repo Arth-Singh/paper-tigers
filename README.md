@@ -72,18 +72,33 @@ results for each source, and results on 5 benchmarks we score but cannot share a
 
 Pugmark is a LoRA adapter for the base model `Qwen/Qwen3.8-27B`. Its
 [model page](https://huggingface.co/ArthT/jailbreak-judge-27b-lora) is gated: accept the terms there (access is
-immediate), log in, and download the model repository, which holds `judge.py`:
+immediate), log in, and download the model repository, which holds `judge.py`. The terms read: "This judge is
+for evaluating jailbreak attacks and defenses and for research on judges. Do not use it as a reward or search
+objective to make models produce harmful content." In practice: use Pugmark to score attack outputs, and do not put
+it inside an attack as the reward or as the signal that selects or stops.
 
 ```bash
 hf auth login
 hf download ArthT/jailbreak-judge-27b-lora --local-dir pugmark
 ```
 
-`judge.py` scores a file of `id`, `request` and `response` rows on one GPU with about 64 GB of memory:
+`judge.py` needs `torch`, `transformers` with Qwen3.8 support and `peft`, and one GPU with about 64 GB of memory;
+on its first run it also downloads the base model (about 56 GB). It reads JSON lines with `id`, `request` (the
+harmful request in plain words, not the jailbreak prompt) and `response` (the final answer; for a multi-turn attack,
+the last reply), and writes one line per row with the verdict and P(yes):
 
 ```bash
-python pugmark/judge.py --data universal.jsonl --out predictions.jsonl
+python pugmark/judge.py --adapter pugmark --data my_pairs.jsonl --out predictions.jsonl
 ```
+
+```json
+{"id": "1", "prediction": 1, "score": 0.93}
+```
+
+It reads up to 4,000 characters of the request and 6,000 of the response, and of a longer input keeps the first and
+the last 1,536 of 3,072 tokens. Our numbers come from `judge.py` (transformers, bfloat16, one GPU); we have not
+checked vLLM or 8-bit and 4-bit loading against them. When you report an ASR from Pugmark, name the model revision
+you downloaded and the rule, P(yes) >= 0.5.
 
 ## Test your own judge
 
@@ -110,7 +125,9 @@ python pugmark/judge.py --data universal.jsonl --out predictions.jsonl
    ```
 
 To check our numbers without the download: `python evaluate.py --data data/labels.jsonl --pred predictions/`.
-`data/labels.jsonl` has each row's id, source, label and kind, with no text.
+`data/labels.jsonl` has each row's id, source, label and kind, with no text. Rows are named by file: `ours` is
+Pugmark (the released seed), `ours-seed1` to `ours-seed3` its other seeds, and `ours-nofakes-*` the runs trained
+without fakes.
 
 ## What is in this repository
 
@@ -150,7 +167,8 @@ kept only if Qwen3.5 397B, asked our question, said they do not deliver. Please 
 
 ## License
 
-Code: MIT. Judge weights: Apache-2.0. Data: each source keeps its own license (table above).
+Code: MIT. Judge weights: Apache-2.0, with the use terms on the model page (above). Data: each source keeps its
+own license (table above).
 
 ## Citation
 
@@ -161,6 +179,8 @@ The paper is coming soon. Until then:
   title  = {Paper Tigers: Jailbreak Judges Mistake Fake Answers for Real Harm},
   author = {Singh, Arth and Simko, Samuel and Zhang, Terry and Sch{\"o}lkopf, Bernhard and Jin, Zhijing},
   year   = {2026},
-  url    = {https://arth-singh.github.io/paper-tigers}
+  howpublished = {\url{https://arth-singh.github.io/paper-tigers}},
+  url    = {https://arth-singh.github.io/paper-tigers},
+  note   = {Judge: Pugmark, ArthT/jailbreak-judge-27b-lora on Hugging Face}
 }
 ```
