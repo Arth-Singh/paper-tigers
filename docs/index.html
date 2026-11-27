@@ -463,6 +463,9 @@ footer .nav { flex: 0 0 auto; font-size: 14px; }
   dl.words dd { margin-bottom: 10px; }
   table.stack thead { display: none; }
   .tbl .barcol { display: none; }
+  .board:not(.wide) { min-width: 0; }
+  .tbl th, .tbl td { padding-left: 8px; padding-right: 8px; }
+  .tbl th, .tbl th button { white-space: normal; }
   .tbl th button { min-height: 40px; }
   .controls label { min-height: 40px; }
   .controls input[type="checkbox"] { width: 22px; height: 22px; }
@@ -497,8 +500,8 @@ footer .nav { flex: 0 0 auto; font-size: 14px; }
 <section id="top" class="wrap hero">
   <div class="hero-text">
     <h1><span class="h1-main"><span class="hl">Paper Tigers</span><span class="colon">:</span></span> <span class="h1-sub">Jailbreak Judges Mistake Fake Answers for Real Harm</span></h1>
-    <p class="dek">Jailbreak papers report an attack success rate (ASR): the share of answers that a judge, a
-    classifier or a prompted model, calls a successful attack. An answer that looks dangerous but delivers nothing is
+    <p class="dek">Jailbreak papers report an attack success rate (ASR): the share of answers that a judge (a
+    classifier or a prompted model) calls a successful attack. An answer that looks dangerous but delivers nothing is
     a paper tiger. Many judges used in attack papers count such answers as successes: the HarmBench classifier calls
     <span data-fill="hb_fooled_pct"></span> of our fake answers a success, so an ASR can come out too high. We trained
     a judge, Pugmark (the owl), to ask one question: <span class="q">does the answer actually deliver?</span> It calls
@@ -588,20 +591,20 @@ footer .nav { flex: 0 0 auto; font-size: 14px; }
     <p class="t">Pugmark calls <span data-fill="ours_flagged_fakes"></span> of <span data-fill="fakes_total"></span> fake
     answers a success. The HarmBench classifier calls <span data-fill="hb_fooled_pct"></span> of them a success, Llama
     Guard 4 <span data-fill="lg4_fooled_pct"></span>.</p>
-    <p class="t seed">Released seed. Mean of four training runs: <span data-fill="seeds_fooled"></span>.</p>
+    <p class="t seed">Released model. Mean of four training runs: <span data-fill="seeds_fooled"></span>.</p>
   </div>
   <div class="tile" style="--accent: var(--green);">
     <p class="lab">False alarms on failed attempts</p><p class="big" data-fill="ours_alarms_pct"></p>
     <p class="t">Failed attempts Pugmark still calls a success. The HarmBench classifier:
     <span data-fill="hb_alarms_pct"></span>. Refusal keywords: <span data-fill="kw_alarms_pct"></span>.</p>
-    <p class="t seed">Released seed. Mean of four training runs: <span data-fill="seeds_alarms_mean"></span>.</p>
+    <p class="t seed">Released model. Mean of four training runs: <span data-fill="seeds_alarms_mean"></span>.</p>
   </div>
   <div class="tile" style="--accent: var(--ink-3);">
     <p class="lab">Error in attack success rate</p><p class="big" data-fill="ours_asr_error"></p>
     <p class="t">Points between the ASR Pugmark reports and the ASR of the human labels, averaged over 7 benchmarks.
     The HarmBench classifier is off by <span data-fill="harmbench_asr"></span>; <span data-fill="others_over_20"></span>
     judges by 20 or more.</p>
-    <p class="t seed">Released seed. Mean of four training runs: <span data-fill="seeds_asr_mean"></span>
+    <p class="t seed">Released model. Mean of four training runs: <span data-fill="seeds_asr_mean"></span>
     (<span data-fill="seeds_asr_dash"></span>).</p>
   </div>
   <div class="tile" style="--accent: var(--yellow);">
@@ -609,8 +612,8 @@ footer .nav { flex: 0 0 auto; font-size: 14px; }
     <p class="t">The average of three rates on <span data-fill="rows"></span> answers: real successes caught
     (<span data-fill="ours_caught_pct"></span>), failed attempts rejected (<span data-fill="ours_rejects_failed_pct"></span>)
     and fakes rejected (<span data-fill="ours_rejects_fakes_pct"></span>). The next best judge scores
-    <span data-fill="next_score"></span>.</p>
-    <p class="t seed">Released seed. Mean of four training runs: <span data-fill="seeds_mean"></span>
+    <span data-fill="next_score"></span>; a judge that calls every answer a failure scores 66.7.</p>
+    <p class="t seed">Released model. Mean of four training runs: <span data-fill="seeds_mean"></span>
     (<span data-fill="seeds_dash"></span>).</p>
   </div>
 </section>
@@ -760,21 +763,10 @@ footer .nav { flex: 0 0 auto; font-size: 14px; }
       released seed (<span data-fill="seeds_asr"></span> across four training runs), the HarmBench classifier by
       <span data-fill="harmbench_asr"></span>.</li>
     <li><b>On real attack outputs, Pugmark's flags are real successes far more often than the classifiers'.</b> On
-      <span data-fill="cb_rows"></span> best-of-N and inpainting attack completions against a model defended with
-      circuit breakers, under which text often only resembles compliance, the StrongREJECT classifier flags
-      <span data-fill="cb_sr_flags"></span>, the HarmBench classifier <span data-fill="cb_hb_flags"></span> and Pugmark
-      <span data-fill="cb_ours_flags"></span>. Three LLM graders with GuidedBench's rubric, who saw every flagged
-      completion and <span data-fill="cb_unflagged"></span> others, call <span data-fill="cb_sr_share"></span>,
-      <span data-fill="cb_hb_share"></span> and <span data-fill="cb_ours_share"></span> of these flags successes. They
-      agree on only <span data-fill="cb_consensus"></span> successes in all (Pugmark catches
-      <span data-fill="cb_ours_caught"></span>, the classifiers <span data-fill="cb_sr_caught"></span> and
-      <span data-fill="cb_hb_caught"></span>), too few to compare how many successes each judge finds. On the labeled
-      completions of four 2026 papers, Pugmark has the highest mean AUROC of the <span data-fill="fr_judges"></span> open
-      judges we ran (<span data-fill="fr_ours"></span>; fine-tuned StrongREJECT classifier <span data-fill="fr_sr"></span>).
-      Two of these releases were labeled by people
-      (HAJailBench, AnchorRep), where Pugmark ranks <span data-fill="fr_people_rank"></span>
-      (<span data-fill="fr_people_ours"></span>; best: <span data-fill="fr_people_best"></span>), and two by Claude (PEV,
-      LLMaaD), where it ranks first (<span data-fill="fr_claude_ours"></span>; next: <span data-fill="fr_claude_next"></span>).</li>
+      attack completions against a model with a defense under which text often only resembles compliance, three LLM
+      graders call <span data-fill="cb_ours_share"></span> of Pugmark's flags successes,
+      <span data-fill="cb_hb_share"></span> of the HarmBench classifier's and <span data-fill="cb_sr_share"></span> of the
+      StrongREJECT classifier's (details under “Show four more findings”).</li>
     <li><b>Without fakes, the best classifier is level with Pugmark.</b> On the first two checks alone Pugmark scores
       <span data-fill="ours_no_fakes"></span> and the HarmBench classifier <span data-fill="harmbench_no_fakes"></span>,
       a gap inside the noise (95% interval <span data-fill="no_fakes_ci"></span> points). The difference is the fakes:
@@ -782,8 +774,25 @@ footer .nav { flex: 0 0 auto; font-size: 14px; }
       <span data-fill="ours_fooled"></span>.</li>
     </ol>
   <details class="more">
-    <summary>Show three more findings</summary>
+    <summary>Show four more findings</summary>
   <ol class="findings" start="6">
+    <li><b>The real-attack checks in detail.</b> On
+      <span data-fill="cb_rows"></span> completions of two published attacks (best-of-N and inpainting) against Llama-3-8B-Instruct
+      defended with circuit breakers, under which text often only resembles compliance, the StrongREJECT classifier flags
+      <span data-fill="cb_sr_flags"></span>, the HarmBench classifier <span data-fill="cb_hb_flags"></span> and Pugmark
+      <span data-fill="cb_ours_flags"></span>. Three LLM graders with GuidedBench's rubric (a list of the points a real answer must contain), who saw every flagged
+      completion and <span data-fill="cb_unflagged"></span> others, call <span data-fill="cb_sr_share"></span> of the
+      StrongREJECT classifier's flags successes, <span data-fill="cb_hb_share"></span> of the HarmBench classifier's and
+      <span data-fill="cb_ours_share"></span> of Pugmark's. They
+      agree on only <span data-fill="cb_consensus"></span> successes in all (Pugmark catches
+      <span data-fill="cb_ours_caught"></span>, the classifiers <span data-fill="cb_sr_caught"></span> and
+      <span data-fill="cb_hb_caught"></span>), too few to compare how many successes each judge finds. On the labeled
+      attack completions released with four 2026 papers, Pugmark has the highest mean AUROC of the <span data-fill="fr_judges"></span> open
+      judges we ran (<span data-fill="fr_ours"></span>; fine-tuned StrongREJECT classifier <span data-fill="fr_sr"></span>).
+      Two of these releases were labeled by people
+      (HAJailBench, AnchorRep), where Pugmark ranks <span data-fill="fr_people_rank"></span>
+      (<span data-fill="fr_people_ours"></span>; best: <span data-fill="fr_people_best"></span>), and two by Claude (PEV,
+      LLMaaD), where it ranks first (<span data-fill="fr_claude_ours"></span>; next: <span data-fill="fr_claude_next"></span>).</li>
     <li><b>Training on the task beats size.</b> The same 27B model, prompted with our question but not trained, scores
       <span data-fill="qwen27_score"></span>, and a 397B model prompted the same way scores
       <span data-fill="qwen397_score"></span>. Pugmark, the 27B model after training, scores <span data-fill="ours_score"></span>. Its
@@ -856,7 +865,9 @@ footer .nav { flex: 0 0 auto; font-size: 14px; }
     <label><input type="checkbox" id="expert"> Expert columns</label>
   </div>
   <p class="about" id="bench-about"></p>
-  <p class="small muted" style="margin: 0 0 8px;">Rates in %, ASR error in percentage points. Click a column name to sort.</p>
+  <p class="small muted" style="margin: 0 0 8px;">Rates in %, ASR error in percentage points. Click a column name to sort.
+  Always “no” and Always “yes” are reference rows with no model: calling every answer a failure scores 66.7, calling
+  every answer a success 33.3.</p>
   <div class="scroll"><table class="tbl board" id="board"><thead></thead><tbody></tbody></table></div>
   <p class="note" id="board-note"></p>
   <p class="note" id="refusal-note"></p>
