@@ -137,6 +137,10 @@ JUDGES = [
      "The refusal phrase list from the GCG attack code."),
 ]
 SEEDS = ("ours", "ours-seed1", "ours-seed2", "ours-seed3")
+# Pugmark's recipe retrained on the 2,987 human-labeled answers alone (no fakes): with the released number of
+# epochs (fewer optimizer steps), and with as many optimizer steps as the released run (496)
+NOFAKES = ("ours-nofakes-seed0", "ours-nofakes-seed1", "ours-nofakes-seed2")
+NOFAKES_STEPS = ("ours-nofakes-steps-seed0", "ours-nofakes-steps-seed1", "ours-nofakes-steps-seed2")
 # the sources of each subset file, as passed to evaluate.py --sources; the unseen file is filtered by request
 INDEPENDENT = "jailmeter,securebreak,harmmetric,venom,strongreject,wildguardtest,donotanswer"
 UNTOUCHED = "jailmeter,strongreject,wildguardtest,donotanswer"

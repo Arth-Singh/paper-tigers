@@ -118,7 +118,7 @@ To check our numbers without the download: `python evaluate.py --data data/label
 |---|---|
 | `evaluate.py` | Scores a predictions file: the three checks, the score, the ASR error, AUROC, and a table per source. |
 | `data/labels.jsonl` | The label of every test answer (id, source, label, kind), with no text. |
-| `predictions/` | Every judge's verdict on every test answer (ids and scores only), and Pugmark's 3 other seeds. |
+| `predictions/` | Every judge's verdict on every test answer (ids and scores only), Pugmark's 3 other seeds, and 6 runs of its recipe on the human-labeled answers alone (`ours-nofakes-*`: 3 seeds for the released two epochs, 3 for the released 496 optimizer steps). |
 | `results/` | The numbers behind the project page, as JSON and CSV. |
 | `prompts.md` | Our question, word for word, in both forms we used. |
 | `docs/` | The project page. |
