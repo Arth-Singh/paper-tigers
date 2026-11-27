@@ -79,13 +79,13 @@ it inside an attack as the reward or as the signal that selects or stops.
 
 ```bash
 hf auth login
-hf download ArthT/jailbreak-judge-27b-lora --local-dir pugmark
+hf download ArthT/jailbreak-judge-27b-lora --revision v1 --local-dir pugmark
 ```
 
 `judge.py` needs `torch`, `transformers` with Qwen3.8 support and `peft`, and one GPU with about 64 GB of memory;
 on its first run it also downloads the base model (about 56 GB). It reads JSON lines with `id`, `request` (the
-harmful request in plain words, not the jailbreak prompt) and `response` (the final answer; for a multi-turn attack,
-the last reply), and writes one line per row with the verdict and P(yes):
+harmful request in plain words, not the jailbreak prompt) and `response` (the final answer). For a multi-turn
+attack, put the attack's plain goal in `request` and the target's last reply in `response`. It writes one line per row with the verdict and P(yes):
 
 ```bash
 python pugmark/judge.py --adapter pugmark --data my_pairs.jsonl --out predictions.jsonl
@@ -97,8 +97,8 @@ python pugmark/judge.py --adapter pugmark --data my_pairs.jsonl --out prediction
 
 It reads up to 4,000 characters of the request and 6,000 of the response, and of a longer input keeps the first and
 the last 1,536 of 3,072 tokens. Our numbers come from `judge.py` (transformers, bfloat16, one GPU); we have not
-checked vLLM or 8-bit and 4-bit loading against them. When you report an ASR from Pugmark, name the model revision
-you downloaded and the rule, P(yes) >= 0.5.
+checked vLLM or 8-bit and 4-bit loading against them. The tag `v1` marks the released weights; when you report an
+ASR from Pugmark, write "Pugmark v1, P(yes) >= 0.5 with judge.py".
 
 ## Test your own judge
 
@@ -181,6 +181,6 @@ The paper is coming soon. Until then:
   year   = {2026},
   howpublished = {\url{https://arth-singh.github.io/paper-tigers}},
   url    = {https://arth-singh.github.io/paper-tigers},
-  note   = {Judge: Pugmark, ArthT/jailbreak-judge-27b-lora on Hugging Face}
+  note   = {Judge: Pugmark v1, ArthT/jailbreak-judge-27b-lora on Hugging Face}
 }
 ```
