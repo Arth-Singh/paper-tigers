@@ -330,6 +330,7 @@ def facts(results, extra):
         "seeds_fooled": p1(mean(seeds, fooled)) + "%", "seeds_no_fakes": p1(mean(seeds, no_fakes)),
         "nofakes_fooled": p1(mean(nofakes, fooled)) + "%", "nofakes_no_fakes": p1(mean(nofakes, no_fakes)),
         "nofakes_steps_fooled": p1(mean(nofakes_steps, fooled)) + "%",
+        "nofakes_steps_no_fakes": p1(mean(nofakes_steps, no_fakes)),
         "opus_refused": f"{sum(opus['refused'].values()):,}", "opus_refused_fakes": str(opus["refused"]["fake"]),
         "fakes_total": str(ours["fakes"]),
         "opus_judged_score": p1(opus["score"]),
