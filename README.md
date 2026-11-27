@@ -1,6 +1,6 @@
 # Paper Tigers: Jailbreak Judges Mistake Fake Answers for Real Harm
 
-Arth Singh<sup>1,2*</sup>, Samuel Simko<sup>3,4*</sup>, Terry Zhang<sup>5</sup>, Bernhard Schölkopf<sup>6,7</sup>, Zhijing Jin<sup>2,4,6</sup>
+Arth Singh<sup>1,2*</sup>, Samuel Simko<sup>2,3,4*</sup>, Terry Zhang<sup>5</sup>, Bernhard Schölkopf<sup>6,7</sup>, Zhijing Jin<sup>2,4,6</sup>
 
 <sup>1</sup> AIM Intelligence · <sup>2</sup> Jinesis Lab, University of Toronto & Vector Institute · <sup>3</sup> ETH Zurich ·
 <sup>4</sup> EuroSafeAI · <sup>5</sup> University of Oxford · <sup>6</sup> Max Planck Institute for Intelligent Systems,
